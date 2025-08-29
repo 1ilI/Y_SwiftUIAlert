@@ -4,34 +4,34 @@
 ![style](./Assets/Y_SwiftUIAlertStyle.png)
 
 ## 功能说明
-### 通过 YAlertConfig 展示 Alert
-使用 YAlertConfig 的静态工厂方法直接创建Alert
+### 通过 Y_AlertConfig 展示 Alert
+使用 Y_AlertConfig 的静态工厂方法直接创建Alert
 
-- **简单 Alert**: `YAlertConfig.simple()` - 基础消息提示
-- **确认 Alert**: `YAlertConfig.confirm()` - 确认/取消双按钮
-- **危险操作**: `YAlertConfig.destructive()` - 红色警告按钮
-- **TextField 输入**: `YAlertConfig.textField()` - 单输入框
-- **多 TextField**: `YAlertConfig.multiTextField()` - 多输入框表单
+- **简单 Alert**: `Y_AlertConfig.simple()` - 基础消息提示
+- **确认 Alert**: `Y_AlertConfig.confirm()` - 确认/取消双按钮
+- **危险操作**: `Y_AlertConfig.destructive()` - 红色警告按钮
+- **TextField 输入**: `Y_AlertConfig.textField()` - 单输入框
+- **多 TextField**: `Y_AlertConfig.multiTextField()` - 多输入框表单
 
 **适用场景**：需要精确控制Alert配置的复杂场景，可随时改变弹窗样式、内容
 
 ```swift
 struct DemoPage: View {
-    @State private var alertConfig: YAlertConfig?
+    @State private var alertConfig: Y_AlertConfig?
 
     // MARK: - Body
     var body: some View {
         NavigationView {
             xxx
         }
-        // 写一个 .yAlert(config) 即可
-        .yAlert($alertConfig)
+        // 写一个 .y_alert(config) 即可
+        .y_alert($alertConfig)
     }
 
     // 要展示弹窗时，创建 alertConfig 即可
     func showAlertWithConfig() {
         do {
-            alertConfig = try YAlertConfig.confirm(
+            alertConfig = try Y_AlertConfig.confirm(
                 title: "弹窗标题 alert title",
                 message: "弹窗消息 alert message",
                 onConfirm: {
@@ -52,12 +52,12 @@ struct DemoPage: View {
 
 演示 SwiftUI 风格的便利方法：
 
-- **`.ySimpleAlert()`** - 简单消息提示
-- **`.yConfirmAlert()`** - 确认对话框
-- **`.yDestructiveAlert()`** - 危险操作确认
-- **`.yTextFieldAlert()`** - 单输入框Alert
-- **`.yMultiTextFieldAlert()`** - 多输入框Alert
-- **`.yActionSheet()`** - 操作表单样式
+- **`.y_simpleAlert()`** - 简单消息提示
+- **`.y_confirmAlert()`** - 确认对话框
+- **`.y_destructiveAlert()`** - 危险操作确认
+- **`.y_textFieldAlert()`** - 单输入框Alert
+- **`.y_multiTextFieldAlert()`** - 多输入框Alert
+- **`.y_actionSheet()`** - 操作表单样式
 
 **适用场景**：快速实现常见Alert需求的日常开发，单个页面的弹窗样式固定
 
@@ -71,7 +71,7 @@ struct DemoPage: View {
             xxx
         }
         // 使用 showAlert bool 值,控制弹窗展示
-        .yConfirmAlert("弹窗标题 alert title", isPresented: $showAlert, message: "弹窗消息 alert message") {
+        .y_confirmAlert("弹窗标题 alert title", isPresented: $showAlert, message: "弹窗消息 alert message") {
             print("点击确认")
         } onCancel: {
             print("点击取消")
@@ -98,11 +98,11 @@ struct DemoPage: View {
 
 ## Y_SwiftUIAlert Example 示例
 
-### 1. 直接使用 YAlertConfig（AlertWithConfigDemo 演示）
+### 1. 直接使用 Y_AlertConfig（AlertWithConfigDemo 演示）
 
 ```swift
 // 简单Alert
-alertConfig = try YAlertConfig.simple(
+alertConfig = try Y_AlertConfig.simple(
     title: "提示",
     message: "操作成功"
 ) {
@@ -110,7 +110,7 @@ alertConfig = try YAlertConfig.simple(
 }
 
 // 确认Alert
-alertConfig = try YAlertConfig.confirm(
+alertConfig = try Y_AlertConfig.confirm(
     title: "确认删除",
     message: "此操作不可撤销",
     onConfirm: { /* 确认操作 */ },
@@ -118,8 +118,8 @@ alertConfig = try YAlertConfig.confirm(
 )
 
 // TextField Alert
-let textConfig = YTextFieldConfig.email()
-alertConfig = try YAlertConfig.textField(
+let textConfig = Y_TextFieldConfig.email()
+alertConfig = try Y_AlertConfig.textField(
     title: "设置邮箱",
     textFieldConfig: textConfig,
     onConfirm: { email in /* 处理邮箱 */ }
@@ -129,16 +129,16 @@ alertConfig = try YAlertConfig.textField(
 ### 2. SwiftUI 便利方法（SimpleAlertDemo 演示）
 
 ```swift
-.ySimpleAlert("提示", isPresented: $showAlert, message: "操作成功")
+.y_simpleAlert("提示", isPresented: $showAlert, message: "操作成功")
 
-.yConfirmAlert("确认删除", isPresented: $showConfirm) {
+.y_confirmAlert("确认删除", isPresented: $showConfirm) {
     // 确认回调
 } onCancel: {
     // 取消回调
 }
 
-.yTextFieldAlert("输入名称", isPresented: $showInput, 
-                textFieldConfig: YTextFieldConfig.text()) { name in
+.y_textFieldAlert("输入名称", isPresented: $showInput, 
+                textFieldConfig: Y_TextFieldConfig.text()) { name in
     // 处理输入
 }
 ```
@@ -146,11 +146,11 @@ alertConfig = try YAlertConfig.textField(
 ### 3. Builder 模式（AdvancedFeaturesDemo 演示）
 
 ```swift
-let alert = try YAlertBuilder(title: "用户注册")
+let alert = try Y_AlertBuilder(title: "用户注册")
     .message("请填写注册信息")
-    .textField(YTextFieldConfig.username())
-    .textField(YTextFieldConfig.email())
-    .textField(YTextFieldConfig.password())
+    .textField(Y_TextFieldConfig.username())
+    .textField(Y_TextFieldConfig.email())
+    .textField(Y_TextFieldConfig.password())
     .confirmButton(title: "注册") { values in
         // 处理注册信息
     }

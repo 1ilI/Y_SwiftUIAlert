@@ -36,35 +36,35 @@ struct SimpleAlertDemo: View {
         }
         
         // 便利简单Alert
-        .ySimpleAlert("便利方法", isPresented: $showSimpleAlert, message: "这是使用便利方法创建的简单Alert") {
+        .y_simpleAlert("便利方法", isPresented: $showSimpleAlert, message: "这是使用便利方法创建的简单Alert") {
             resultMessage = "✅ 便利方法 - 简单Alert确认"
         }
         
         // 便利确认Alert
-        .yConfirmAlert("确认操作", isPresented: $showConfirmAlert, message: "使用便利方法的确认Alert") {
+        .y_confirmAlert("确认操作", isPresented: $showConfirmAlert, message: "使用便利方法的确认Alert") {
             resultMessage = "✅ 便利方法 - 确认操作"
         } onCancel: {
             resultMessage = "❌ 便利方法 - 取消操作"
         }
         
         // 便利危险Alert
-        .yDestructiveAlert("危险操作", isPresented: $showDestructiveAlert, message: "使用便利方法的危险Alert") {
+        .y_destructiveAlert("危险操作", isPresented: $showDestructiveAlert, message: "使用便利方法的危险Alert") {
             resultMessage = "💥 便利方法 - 执行危险操作"
         } onCancel: {
             resultMessage = "🛡️ 便利方法 - 取消危险操作"
         }
         
         // 便利TextField
-        .yTextFieldAlert("输入名称", isPresented: $showTextFieldAlert, textFieldConfig: YTextFieldConfig.nickname()) { name in
+        .y_textFieldAlert("输入名称", isPresented: $showTextFieldAlert, textFieldConfig: Y_TextFieldConfig.nickname()) { name in
             resultMessage = "✅ 便利方法 - 输入的名称: '\(name)'"
         } onCancel: {
             resultMessage = "❌ 便利方法 - 取消输入"
         }
         
         // 便利多TextField
-        .yMultiTextFieldAlert("登录信息", isPresented: $showMultiTextFieldAlert, textFieldConfigs: [
-            YTextFieldConfig.username(),
-            YTextFieldConfig.password()
+        .y_multiTextFieldAlert("登录信息", isPresented: $showMultiTextFieldAlert, textFieldConfigs: [
+            Y_TextFieldConfig.username(),
+            Y_TextFieldConfig.password()
         ]) { values in
             resultMessage = "✅ 便利方法 - 用户名: '\(values[0])', 密码: '\(values[1])'"
         } onCancel: {
@@ -72,17 +72,17 @@ struct SimpleAlertDemo: View {
         }
         
         // 便利ActionSheet
-        .yActionSheet("选择操作", isPresented: $showActionSheet, actions: [
-            YAlertAction.normal(title: "选项1") {
+        .y_actionSheet("选择操作", isPresented: $showActionSheet, actions: [
+            Y_AlertAction.normal(title: "选项1") {
                 resultMessage = "🔥 便利方法 - 选择了选项1"
             },
-            YAlertAction.normal(title: "选项2") {
+            Y_AlertAction.normal(title: "选项2") {
                 resultMessage = "🌟 便利方法 - 选择了选项2"
             },
-            YAlertAction.destructive(title: "删除") {
+            Y_AlertAction.destructive(title: "删除") {
                 resultMessage = "💥 便利方法 - 执行删除操作"
             },
-            YAlertAction.cancel {
+            Y_AlertAction.cancel {
                 resultMessage = "❌ 便利方法 - 取消ActionSheet"
             }
         ])
@@ -94,7 +94,7 @@ private extension SimpleAlertDemo {
     var convenienceMethodsSection: some View {
         GroupBox("便利方法测试") {
             VStack(spacing: 12) {
-                Text("使用.ySimpleAlert()等便利方法")
+                Text("使用y_simpleAlert()等便利方法")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 

@@ -19,7 +19,7 @@ struct ContentView: View {
                     Spacer()
                     
                     NavigationLink(destination: AlertWithConfigDemo()) {
-                        Text("通过 YAlertConfig 展示 Alert")
+                        Text("通过 Y_AlertConfig 展示 Alert")
                     }
 
                     NavigationLink(destination: SimpleAlertDemo()) {
@@ -37,7 +37,7 @@ struct ContentView: View {
             .navigationTitle("Y_SwiftUIAlert 示例")
             .task {
                 // 开启打印输出
-                YAlertManager.enableDebugLog()
+                Y_AlertManager.enableDebugLog()
             }
         }
     }

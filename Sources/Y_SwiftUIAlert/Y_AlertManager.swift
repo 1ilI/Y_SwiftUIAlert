@@ -1,5 +1,5 @@
 //
-//  YAlertManager.swift
+//  Y_AlertManager.swift
 //  Y_SwiftUIAlert
 //
 //  Created by Yue on 2025.
@@ -9,13 +9,13 @@ import UIKit
 import Foundation
 
 // MARK: - 窗口提供协议（便于测试）
-public protocol YWindowProviding {
+public protocol Y_WindowProviding {
     func getCurrentWindow() -> UIWindow?
     func getTopViewController() -> UIViewController?
 }
 
 // MARK: - 默认窗口提供者
-public class YDefaultWindowProvider: YWindowProviding {
+public class Y_DefaultWindowProvider: Y_WindowProviding {
     public init() {}
     
     public func getCurrentWindow() -> UIWindow? {
@@ -55,21 +55,21 @@ public class YDefaultWindowProvider: YWindowProviding {
 }
 
 // MARK: - Alert展示协议
-public protocol YAlertPresentable {
-    func presentAlert(_ config: YAlertConfig) async -> Result<Void, YAlertError>
-    func presentAlert(_ config: YAlertConfig, completion: ((Result<Void, YAlertError>) -> Void)?)
+public protocol Y_AlertPresentable {
+    func presentAlert(_ config: Y_AlertConfig) async -> Result<Void, Y_AlertError>
+    func presentAlert(_ config: Y_AlertConfig, completion: ((Result<Void, Y_AlertError>) -> Void)?)
 }
 
 // MARK: - Alert管理器
 @MainActor
-public class YAlertManager: YAlertPresentable, ObservableObject {
-    public static let shared = YAlertManager()
+public class Y_AlertManager: Y_AlertPresentable, ObservableObject {
+    public static let shared = Y_AlertManager()
     
-    private let windowProvider: YWindowProviding
+    private let windowProvider: Y_WindowProviding
     
     // 当前展示的Alert控制器（用于验证更新）
     private weak var currentAlertController: UIAlertController?
-    private var currentConfig: YAlertConfig?
+    private var currentConfig: Y_AlertConfig?
     
     // 文本变化回调存储（使用弱引用避免循环引用）
     private var textFieldCallbacks: [WeakTextFieldCallback] = []
@@ -97,15 +97,15 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
     }
     
     // MARK: - 初始化和清理
-    public init(windowProvider: YWindowProviding = YDefaultWindowProvider()) {
+    public init(windowProvider: Y_WindowProviding = Y_DefaultWindowProvider()) {
         self.windowProvider = windowProvider
-        debugLog("🚀 YAlertManager初始化完成")
+        debugLog("🚀 Y_AlertManager初始化完成")
     }
     
     // MARK: - 公共展示方法
     
     /// 异步展示Alert
-    public func presentAlert(_ config: YAlertConfig) async -> Result<Void, YAlertError> {
+    public func presentAlert(_ config: Y_AlertConfig) async -> Result<Void, Y_AlertError> {
         return await withCheckedContinuation { continuation in
             presentAlert(config) { result in
                 continuation.resume(returning: result)
@@ -114,12 +114,12 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
     }
     
     /// 展示Alert（带完成回调）
-    public func presentAlert(_ config: YAlertConfig, completion: ((Result<Void, YAlertError>) -> Void)? = nil) {
+    public func presentAlert(_ config: Y_AlertConfig, completion: ((Result<Void, Y_AlertError>) -> Void)? = nil) {
         debugLog("📱 准备展示Alert: '\(config.title)'")
         
         // 获取顶层视图控制器
         guard let topViewController = windowProvider.getTopViewController() else {
-            let error = YAlertError.noValidWindow
+            let error = Y_AlertError.noValidWindow
             debugLog("❌ \(error.localizedDescription ?? "窗口获取失败")")
             completion?(.failure(error))
             return
@@ -140,7 +140,7 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
             }
             
         } catch {
-            let alertError = error as? YAlertError ?? YAlertError.presentationFailed(underlying: error)
+            let alertError = error as? Y_AlertError ?? Y_AlertError.presentationFailed(underlying: error)
             debugLog("❌ Alert展示失败: \(alertError.localizedDescription ?? "未知错误")")
             completion?(.failure(alertError))
         }
@@ -149,7 +149,7 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
     // MARK: - 私有方法
     
     /// 创建UIAlertController
-    private func createAlertController(from config: YAlertConfig) throws -> UIAlertController {
+    private func createAlertController(from config: Y_AlertConfig) throws -> UIAlertController {
         // 创建新的AlertController
         let alertController = UIAlertController(
             title: nil,
@@ -202,7 +202,7 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
     }
     
     /// 配置TextField
-    private func configureTextField(_ textField: UITextField, with config: YTextFieldConfig, index: Int) {
+    private func configureTextField(_ textField: UITextField, with config: Y_TextFieldConfig, index: Int) {
         debugLog("🔧 配置TextField[\(index)]: '\(config.placeholder)'")
         
         // 基础配置
@@ -292,7 +292,7 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
         // 防抖验证更新（性能优化）- 确保Timer及时清理
         validationTimer?.invalidate()
         validationTimer = nil
-        validationTimer = Timer.scheduledTimer(withTimeInterval: YAlertConstants.validationDebounceTime, repeats: false) { [weak self] timer in
+        validationTimer = Timer.scheduledTimer(withTimeInterval: Y_AlertConstants.validationDebounceTime, repeats: false) { [weak self] timer in
             self?.updateConfirmButtonState()
             // Timer执行完成后立即置空，避免内存泄漏
             self?.validationTimer = nil
@@ -314,7 +314,7 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
     }
     
     /// 获取TextField对应的配置
-    private func getCurrentTextFieldConfig(for textField: UITextField) -> YTextFieldConfig? {
+    private func getCurrentTextFieldConfig(for textField: UITextField) -> Y_TextFieldConfig? {
         guard let alertController = currentAlertController,
               let config = currentConfig,
               let textFields = alertController.textFields,
@@ -349,7 +349,7 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
     }
     
     /// 验证所有TextField
-    private func validateAllTextFields(_ textFields: [UITextField], configs: [YTextFieldConfig]) -> Bool {
+    private func validateAllTextFields(_ textFields: [UITextField], configs: [Y_TextFieldConfig]) -> Bool {
         guard textFields.count == configs.count else {
             return false
         }
@@ -364,7 +364,7 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
     }
     
     /// 验证单个TextField
-    private func validateSingleTextField(_ textField: UITextField, with config: YTextFieldConfig) -> Bool {
+    private func validateSingleTextField(_ textField: UITextField, with config: Y_TextFieldConfig) -> Bool {
         let text = textField.text ?? ""
         
         guard let validationRules = config.validationRules else {
@@ -382,7 +382,7 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
     }
     
     /// 处理Action点击
-    private func handleActionTapped(_ action: YAlertAction, alertController: UIAlertController, config: YAlertConfig) {
+    private func handleActionTapped(_ action: Y_AlertAction, alertController: UIAlertController, config: Y_AlertConfig) {
         debugLog("🎯 用户点击: '\(action.title)'")
         
         // 立即清理Timer，避免内存泄漏
@@ -414,25 +414,25 @@ public class YAlertManager: YAlertPresentable, ObservableObject {
 }
 
 // MARK: - Alert 管理器 打印调试
-public extension YAlertManager {
+public extension Y_AlertManager {
     /// 静态调试开关 - 控制是否输出调试日志
     nonisolated(unsafe) static var logEnabled: Bool = false
     
     /// 开启调试日志输出
     nonisolated public static func enableDebugLog() {
-        YAlertManager.logEnabled = true
+        Y_AlertManager.logEnabled = true
     }
     
     /// 关闭调试日志输出
     nonisolated public static func disableDebugLog() {
-        YAlertManager.logEnabled = false
+        Y_AlertManager.logEnabled = false
     }
 }
 
 // MARK: - 条件编译的日志函数（全局）
 #if DEBUG
 internal func debugLog(_ message: String) {
-    if YAlertManager.logEnabled {
+    if Y_AlertManager.logEnabled {
         print("🎯 YAlert: \(message)")
     }
 }

@@ -9,7 +9,7 @@ import XCTest
 @testable import Y_SwiftUIAlert
 
 // MARK: - Mock对象
-class MockWindowProvider: YWindowProviding {
+class MockWindowProvider: Y_WindowProviding {
     var shouldReturnNil = false
     
     func getCurrentWindow() -> UIWindow? {
@@ -25,11 +25,11 @@ class MockWindowProvider: YWindowProviding {
 final class Y_SwiftUIAlertTests: XCTestCase {
     
     var mockWindowProvider: MockWindowProvider!
-    var alertManager: YAlertManager!
+    var alertManager: Y_AlertManager!
     
     override func setUpWithError() throws {
         mockWindowProvider = MockWindowProvider()
-        alertManager = YAlertManager(windowProvider: mockWindowProvider)
+        alertManager = Y_AlertManager(windowProvider: mockWindowProvider)
     }
     
     override func tearDownWithError() throws {
@@ -39,10 +39,10 @@ final class Y_SwiftUIAlertTests: XCTestCase {
     
     // MARK: - 常量测试
     func testConstants() throws {
-        XCTAssertEqual(YAlertConstants.defaultAnimationDuration, 0.3)
-        XCTAssertEqual(YAlertConstants.maxTextFieldCount, 5)
-        XCTAssertEqual(YAlertConstants.DefaultTitles.confirm, "确定")
-        XCTAssertEqual(YAlertConstants.DefaultTitles.cancel, "取消")
+        XCTAssertEqual(Y_AlertConstants.defaultAnimationDuration, 0.3)
+        XCTAssertEqual(Y_AlertConstants.maxTextFieldCount, 5)
+        XCTAssertEqual(Y_AlertConstants.DefaultTitles.confirm, "确定")
+        XCTAssertEqual(Y_AlertConstants.DefaultTitles.cancel, "取消")
     }
     
     // MARK: - 验证规则测试
@@ -73,7 +73,7 @@ final class Y_SwiftUIAlertTests: XCTestCase {
     
     // MARK: - 验证规则集合测试
     func testValidationRuleSet() throws {
-        let ruleSet = YValidationRuleSet([
+        let ruleSet = Y_ValidationRuleSet([
             .required,
             .length(min: 5, max: 20),
             .email
@@ -95,28 +95,28 @@ final class Y_SwiftUIAlertTests: XCTestCase {
     // MARK: - AlertAction测试
     func testAlertActionCreation() throws {
         // 普通Action
-        let normalAction = YAlertAction.normal(title: "确定") {
+        let normalAction = Y_AlertAction.normal(title: "确定") {
             // 测试回调
         }
         XCTAssertEqual(normalAction.title, "确定")
         XCTAssertEqual(normalAction.style, .default)
         
         // TextField Action
-        let textFieldAction = YAlertAction.textField(title: "提交") { values in
+        let textFieldAction = Y_AlertAction.textField(title: "提交") { values in
             // 测试回调
         }
         XCTAssertEqual(textFieldAction.title, "提交")
         XCTAssertEqual(textFieldAction.style, .default)
         
         // 危险Action
-        let destructiveAction = YAlertAction.destructive(title: "删除") {
+        let destructiveAction = Y_AlertAction.destructive(title: "删除") {
             // 测试回调
         }
         XCTAssertEqual(destructiveAction.title, "删除")
         XCTAssertEqual(destructiveAction.style, .destructive)
         
         // 取消Action
-        let cancelAction = YAlertAction.cancel(title: "取消") {
+        let cancelAction = Y_AlertAction.cancel(title: "取消") {
             // 测试回调
         }
         XCTAssertEqual(cancelAction.title, "取消")
@@ -125,9 +125,9 @@ final class Y_SwiftUIAlertTests: XCTestCase {
     
     // MARK: - TextField配置测试
     func testTextFieldConfig() throws {
-        let config = YTextFieldConfig.text(
+        let config = Y_TextFieldConfig.text(
             placeholder: "请输入",
-            validation: YValidationRuleSet(.required, .length(min: 3, max: 20))
+            validation: Y_ValidationRuleSet(.required, .length(min: 3, max: 20))
         )
         
         XCTAssertEqual(config.placeholder, "请输入")
@@ -135,13 +135,13 @@ final class Y_SwiftUIAlertTests: XCTestCase {
         XCTAssertTrue(config.validateOnChange)
         
         // 密码配置
-        let passwordConfig = YTextFieldConfig.password()
+        let passwordConfig = Y_TextFieldConfig.password()
         XCTAssertTrue(passwordConfig.isSecure)
         XCTAssertEqual(passwordConfig.autocapitalizationType, .none)
         XCTAssertEqual(passwordConfig.autocorrectionType, .no)
         
         // 邮箱配置
-        let emailConfig = YTextFieldConfig.email()
+        let emailConfig = Y_TextFieldConfig.email()
         XCTAssertEqual(emailConfig.keyboardType, .emailAddress)
         XCTAssertNotNil(emailConfig.validationRules)
     }
@@ -149,7 +149,7 @@ final class Y_SwiftUIAlertTests: XCTestCase {
     // MARK: - Alert配置测试
     func testAlertConfigCreation() throws {
         // 简单Alert
-        let simpleAlert = try YAlertConfig.simple(
+        let simpleAlert = try Y_AlertConfig.simple(
             title: "提示",
             message: "这是一个测试"
         )
@@ -159,7 +159,7 @@ final class Y_SwiftUIAlertTests: XCTestCase {
         XCTAssertEqual(simpleAlert.textFields.count, 0)
         
         // 确认Alert
-        let confirmAlert = try YAlertConfig.confirm(
+        let confirmAlert = try Y_AlertConfig.confirm(
             title: "确认",
             message: "您确定要执行此操作吗？",
             onConfirm: {}
@@ -169,8 +169,8 @@ final class Y_SwiftUIAlertTests: XCTestCase {
         XCTAssertEqual(confirmAlert.preferredActionIndex, 1)
         
         // TextField Alert
-        let textFieldConfig = YTextFieldConfig.text(placeholder: "请输入")
-        let textFieldAlert = try YAlertConfig.textField(
+        let textFieldConfig = Y_TextFieldConfig.text(placeholder: "请输入")
+        let textFieldAlert = try Y_AlertConfig.textField(
             title: "输入",
             textFieldConfig: textFieldConfig,
             onConfirm: { _ in }
@@ -182,37 +182,37 @@ final class Y_SwiftUIAlertTests: XCTestCase {
     // MARK: - Alert配置验证测试
     func testAlertConfigValidation() throws {
         // 测试Action数量限制
-        var actions: [YAlertAction] = []
-        for i in 0...YAlertConstants.maxActionCount {
-            actions.append(YAlertAction.normal(title: "Action \(i)") {})
+        var actions: [Y_AlertAction] = []
+        for i in 0...Y_AlertConstants.maxActionCount {
+            actions.append(Y_AlertAction.normal(title: "Action \(i)") {})
         }
         
-        XCTAssertThrowsError(try YAlertConfig(
+        XCTAssertThrowsError(try Y_AlertConfig(
             title: "测试",
             actions: actions
         )) { error in
-            if case YAlertError.tooManyActions(let count, let max) = error {
-                XCTAssertEqual(count, YAlertConstants.maxActionCount + 1)
-                XCTAssertEqual(max, YAlertConstants.maxActionCount)
+            if case Y_AlertError.tooManyActions(let count, let max) = error {
+                XCTAssertEqual(count, Y_AlertConstants.maxActionCount + 1)
+                XCTAssertEqual(max, Y_AlertConstants.maxActionCount)
             } else {
                 XCTFail("Expected tooManyActions error")
             }
         }
         
         // 测试TextField数量限制
-        var textFields: [YTextFieldConfig] = []
-        for i in 0...YAlertConstants.maxTextFieldCount {
-            textFields.append(YTextFieldConfig.text(placeholder: "Field \(i)"))
+        var textFields: [Y_TextFieldConfig] = []
+        for i in 0...Y_AlertConstants.maxTextFieldCount {
+            textFields.append(Y_TextFieldConfig.text(placeholder: "Field \(i)"))
         }
         
-        XCTAssertThrowsError(try YAlertConfig(
+        XCTAssertThrowsError(try Y_AlertConfig(
             title: "测试",
             textFields: textFields,
-            actions: [YAlertAction.normal(title: "确定") {}]
+            actions: [Y_AlertAction.normal(title: "确定") {}]
         )) { error in
-            if case YAlertError.tooManyTextFields(let count, let max) = error {
-                XCTAssertEqual(count, YAlertConstants.maxTextFieldCount + 1)
-                XCTAssertEqual(max, YAlertConstants.maxTextFieldCount)
+            if case Y_AlertError.tooManyTextFields(let count, let max) = error {
+                XCTAssertEqual(count, Y_AlertConstants.maxTextFieldCount + 1)
+                XCTAssertEqual(max, Y_AlertConstants.maxTextFieldCount)
             } else {
                 XCTFail("Expected tooManyTextFields error")
             }
@@ -224,12 +224,12 @@ final class Y_SwiftUIAlertTests: XCTestCase {
         // 模拟无有效窗口的情况
         mockWindowProvider.shouldReturnNil = true
         
-        let config = try YAlertConfig.simple(title: "测试")
+        let config = try Y_AlertConfig.simple(title: "测试")
         let result = await alertManager.presentAlert(config)
         
         switch result {
         case .failure(let error):
-            if case YAlertError.noValidWindow = error {
+            if case Y_AlertError.noValidWindow = error {
                 // 期望的错误类型
                 XCTAssert(true)
             } else {
@@ -242,10 +242,10 @@ final class Y_SwiftUIAlertTests: XCTestCase {
     
     // MARK: - Builder模式测试
     func testAlertBuilder() throws {
-        let alert = try YAlertBuilder(title: "测试Builder")
+        let alert = try Y_AlertBuilder(title: "测试Builder")
             .message("这是使用Builder创建的Alert")
-            .textField(YTextFieldConfig.text(placeholder: "输入1"))
-            .textField(YTextFieldConfig.text(placeholder: "输入2"))
+            .textField(Y_TextFieldConfig.text(placeholder: "输入1"))
+            .textField(Y_TextFieldConfig.text(placeholder: "输入2"))
             .confirmButton(title: "提交") { values in
                 // 处理提交
             }
@@ -263,12 +263,12 @@ final class Y_SwiftUIAlertTests: XCTestCase {
     // MARK: - 国际化测试
     func testLocalization() throws {
         // 测试本地化字符串是否正确加载
-        XCTAssertFalse(YAlertLocalizable.confirm.isEmpty)
-        XCTAssertFalse(YAlertLocalizable.cancel.isEmpty)
-        XCTAssertFalse(YAlertLocalizable.delete.isEmpty)
+        XCTAssertFalse(Y_AlertLocalizable.confirm.isEmpty)
+        XCTAssertFalse(Y_AlertLocalizable.cancel.isEmpty)
+        XCTAssertFalse(Y_AlertLocalizable.delete.isEmpty)
         
         // 测试格式化字符串
-        let lengthMessage = YAlertLocalizable.validationLength(min: 3, max: 20)
+        let lengthMessage = Y_AlertLocalizable.validationLength(min: 3, max: 20)
         XCTAssertTrue(lengthMessage.contains("3"))
         XCTAssertTrue(lengthMessage.contains("20"))
     }
@@ -277,7 +277,7 @@ final class Y_SwiftUIAlertTests: XCTestCase {
     func testPerformance() throws {
         measure {
             // 测试大量验证规则的性能
-            let ruleSet = YValidationRuleSet([
+            let ruleSet = Y_ValidationRuleSet([
                 .required,
                 .length(min: 3, max: 100),
                 .email,

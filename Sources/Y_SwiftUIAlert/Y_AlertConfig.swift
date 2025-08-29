@@ -1,5 +1,5 @@
 //
-//  YAlertConfig.swift
+//  Y_AlertConfig.swift
 //  Y_SwiftUIAlert
 //
 //  Created by Yue on 2025.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Alert样式
-public enum YAlertStyle {
+public enum Y_AlertStyle {
     case alert          // 标准Alert样式
     case actionSheet    // ActionSheet样式
     
@@ -23,7 +23,7 @@ public enum YAlertStyle {
 }
 
 // MARK: - Alert错误类型
-public enum YAlertError: LocalizedError {
+public enum Y_AlertError: LocalizedError {
     case noValidWindow
     case configurationInvalid(reason: String)
     case presentationFailed(underlying: Error)
@@ -47,40 +47,40 @@ public enum YAlertError: LocalizedError {
 }
 
 // MARK: - Alert统一配置模型
-public struct YAlertConfig: Equatable {
+public struct Y_AlertConfig: Equatable {
     public let id = UUID()
     public let title: String
     public let message: String?
-    public let textFields: [YTextFieldConfig]
-    public let actions: [YAlertAction]
-    public let style: YAlertStyle
+    public let textFields: [Y_TextFieldConfig]
+    public let actions: [Y_AlertAction]
+    public let style: Y_AlertStyle
     public let preferredActionIndex: Int? // 首选按钮索引
     
     // MARK: - 初始化方法
     public init(
         title: String,
         message: String? = nil,
-        textFields: [YTextFieldConfig] = [],
-        actions: [YAlertAction],
-        style: YAlertStyle = .alert,
+        textFields: [Y_TextFieldConfig] = [],
+        actions: [Y_AlertAction],
+        style: Y_AlertStyle = .alert,
         preferredActionIndex: Int? = nil
     ) throws {
         // 验证配置有效性
         guard !actions.isEmpty else {
-            throw YAlertError.configurationInvalid(reason: "至少需要一个Action")
+            throw Y_AlertError.configurationInvalid(reason: "至少需要一个Action")
         }
         
-        guard textFields.count <= YAlertConstants.maxTextFieldCount else {
-            throw YAlertError.tooManyTextFields(count: textFields.count, max: YAlertConstants.maxTextFieldCount)
+        guard textFields.count <= Y_AlertConstants.maxTextFieldCount else {
+            throw Y_AlertError.tooManyTextFields(count: textFields.count, max: Y_AlertConstants.maxTextFieldCount)
         }
         
-        guard actions.count <= YAlertConstants.maxActionCount else {
-            throw YAlertError.tooManyActions(count: actions.count, max: YAlertConstants.maxActionCount)
+        guard actions.count <= Y_AlertConstants.maxActionCount else {
+            throw Y_AlertError.tooManyActions(count: actions.count, max: Y_AlertConstants.maxActionCount)
         }
         
         if let preferredIndex = preferredActionIndex {
             guard preferredIndex >= 0 && preferredIndex < actions.count else {
-                throw YAlertError.configurationInvalid(reason: "首选Action索引超出范围")
+                throw Y_AlertError.configurationInvalid(reason: "首选Action索引超出范围")
             }
         }
         
@@ -91,31 +91,31 @@ public struct YAlertConfig: Equatable {
         self.style = style
         self.preferredActionIndex = preferredActionIndex
         
-        debugLog("创建YAlertConfig: '\(title)' - \(textFields.count)个TextField, \(actions.count)个Action")
+        debugLog("创建Y_AlertConfig: '\(title)' - \(textFields.count)个TextField, \(actions.count)个Action")
     }
     
     // MARK: - Equatable实现
-    public static func == (lhs: YAlertConfig, rhs: YAlertConfig) -> Bool {
+    public static func == (lhs: Y_AlertConfig, rhs: Y_AlertConfig) -> Bool {
         // 基于id进行比较，因为包含闭包无法直接比较其他属性
         return lhs.id == rhs.id
     }
 }
 
 // MARK: - 便利构造方法
-public extension YAlertConfig {
+public extension Y_AlertConfig {
     
     /// 简单Alert - 只有消息和确认按钮
     static func simple(
         title: String,
         message: String? = nil,
-        confirmTitle: String = YAlertConstants.DefaultTitles.confirm,
+        confirmTitle: String = Y_AlertConstants.DefaultTitles.confirm,
         onConfirm: (() -> Void)? = nil
-    ) throws -> YAlertConfig {
+    ) throws -> Y_AlertConfig {
         let confirmAction = onConfirm != nil ? 
-            YAlertAction.normal(title: confirmTitle, action: onConfirm!) : 
-            YAlertAction.normal(title: confirmTitle, action: {})
+            Y_AlertAction.normal(title: confirmTitle, action: onConfirm!) : 
+            Y_AlertAction.normal(title: confirmTitle, action: {})
             
-        return try YAlertConfig(
+        return try Y_AlertConfig(
             title: title,
             message: message,
             actions: [confirmAction]
@@ -126,17 +126,17 @@ public extension YAlertConfig {
     static func confirm(
         title: String,
         message: String? = nil,
-        confirmTitle: String = YAlertConstants.DefaultTitles.confirm,
-        cancelTitle: String = YAlertConstants.DefaultTitles.cancel,
+        confirmTitle: String = Y_AlertConstants.DefaultTitles.confirm,
+        cancelTitle: String = Y_AlertConstants.DefaultTitles.cancel,
         onConfirm: @escaping () -> Void,
         onCancel: (() -> Void)? = nil
-    ) throws -> YAlertConfig {
+    ) throws -> Y_AlertConfig {
         let actions = [
-            YAlertAction.cancel(title: cancelTitle, action: onCancel ?? {}),
-            YAlertAction.normal(title: confirmTitle, action: onConfirm)
+            Y_AlertAction.cancel(title: cancelTitle, action: onCancel ?? {}),
+            Y_AlertAction.normal(title: confirmTitle, action: onConfirm)
         ]
         
-        return try YAlertConfig(
+        return try Y_AlertConfig(
             title: title,
             message: message,
             actions: actions,
@@ -148,17 +148,17 @@ public extension YAlertConfig {
     static func destructive(
         title: String,
         message: String? = nil,
-        destructiveTitle: String = YAlertConstants.DefaultTitles.delete,
-        cancelTitle: String = YAlertConstants.DefaultTitles.cancel,
+        destructiveTitle: String = Y_AlertConstants.DefaultTitles.delete,
+        cancelTitle: String = Y_AlertConstants.DefaultTitles.cancel,
         onDestructive: @escaping () -> Void,
         onCancel: (() -> Void)? = nil
-    ) throws -> YAlertConfig {
+    ) throws -> Y_AlertConfig {
         let actions = [
-            YAlertAction.cancel(title: cancelTitle, action: onCancel ?? {}),
-            YAlertAction.destructive(title: destructiveTitle, action: onDestructive)
+            Y_AlertAction.cancel(title: cancelTitle, action: onCancel ?? {}),
+            Y_AlertAction.destructive(title: destructiveTitle, action: onDestructive)
         ]
         
-        return try YAlertConfig(
+        return try Y_AlertConfig(
             title: title,
             message: message,
             actions: actions,
@@ -170,18 +170,18 @@ public extension YAlertConfig {
     static func textField(
         title: String,
         message: String? = nil,
-        textFieldConfig: YTextFieldConfig,
-        confirmTitle: String = YAlertConstants.DefaultTitles.confirm,
-        cancelTitle: String = YAlertConstants.DefaultTitles.cancel,
+        textFieldConfig: Y_TextFieldConfig,
+        confirmTitle: String = Y_AlertConstants.DefaultTitles.confirm,
+        cancelTitle: String = Y_AlertConstants.DefaultTitles.cancel,
         onConfirm: @escaping (String) -> Void,
         onCancel: (() -> Void)? = nil
-    ) throws -> YAlertConfig {
+    ) throws -> Y_AlertConfig {
         let actions = [
-            YAlertAction.cancel(title: cancelTitle, action: onCancel ?? {}),
-            YAlertAction.confirm(singleTextFieldAction: onConfirm)
+            Y_AlertAction.cancel(title: cancelTitle, action: onCancel ?? {}),
+            Y_AlertAction.confirm(singleTextFieldAction: onConfirm)
         ]
         
-        return try YAlertConfig(
+        return try Y_AlertConfig(
             title: title,
             message: message,
             textFields: [textFieldConfig],
@@ -194,18 +194,18 @@ public extension YAlertConfig {
     static func multiTextField(
         title: String,
         message: String? = nil,
-        textFieldConfigs: [YTextFieldConfig],
-        confirmTitle: String = YAlertConstants.DefaultTitles.confirm,
-        cancelTitle: String = YAlertConstants.DefaultTitles.cancel,
+        textFieldConfigs: [Y_TextFieldConfig],
+        confirmTitle: String = Y_AlertConstants.DefaultTitles.confirm,
+        cancelTitle: String = Y_AlertConstants.DefaultTitles.cancel,
         onConfirm: @escaping ([String]) -> Void,
         onCancel: (() -> Void)? = nil
-    ) throws -> YAlertConfig {
+    ) throws -> Y_AlertConfig {
         let actions = [
-            YAlertAction.cancel(title: cancelTitle, action: onCancel ?? {}),
-            YAlertAction.confirm(textFieldAction: onConfirm)
+            Y_AlertAction.cancel(title: cancelTitle, action: onCancel ?? {}),
+            Y_AlertAction.confirm(textFieldAction: onConfirm)
         ]
         
-        return try YAlertConfig(
+        return try Y_AlertConfig(
             title: title,
             message: message,
             textFields: textFieldConfigs,
@@ -218,9 +218,9 @@ public extension YAlertConfig {
     static func actionSheet(
         title: String,
         message: String? = nil,
-        actions: [YAlertAction]
-    ) throws -> YAlertConfig {
-        return try YAlertConfig(
+        actions: [Y_AlertAction]
+    ) throws -> Y_AlertConfig {
+        return try Y_AlertConfig(
             title: title,
             message: message,
             actions: actions,
@@ -230,12 +230,12 @@ public extension YAlertConfig {
 }
 
 // MARK: - Builder模式支持
-public class YAlertBuilder {
+public class Y_AlertBuilder {
     private var title: String
     private var message: String?
-    private var textFields: [YTextFieldConfig] = []
-    private var actions: [YAlertAction] = []
-    private var style: YAlertStyle = .alert
+    private var textFields: [Y_TextFieldConfig] = []
+    private var actions: [Y_AlertAction] = []
+    private var style: Y_AlertStyle = .alert
     private var preferredActionIndex: Int?
     
     public init(title: String) {
@@ -247,7 +247,7 @@ public class YAlertBuilder {
         return self
     }
     
-    public func textField(_ config: YTextFieldConfig) -> Self {
+    public func textField(_ config: Y_TextFieldConfig) -> Self {
         textFields.append(config)
         return self
     }
@@ -259,16 +259,16 @@ public class YAlertBuilder {
         return self
     }
     
-    public func action(_ action: YAlertAction) -> Self {
+    public func action(_ action: Y_AlertAction) -> Self {
         actions.append(action)
         return self
     }
     
     public func confirmButton(
-        title: String = YAlertConstants.DefaultTitles.confirm,
+        title: String = Y_AlertConstants.DefaultTitles.confirm,
         action: @escaping () -> Void
     ) -> Self {
-        let confirmAction = YAlertAction.normal(title: title, action: action)
+        let confirmAction = Y_AlertAction.normal(title: title, action: action)
         actions.append(confirmAction)
         if preferredActionIndex == nil {
             preferredActionIndex = actions.count - 1
@@ -277,10 +277,10 @@ public class YAlertBuilder {
     }
     
     public func confirmButton(
-        title: String = YAlertConstants.DefaultTitles.confirm,
+        title: String = Y_AlertConstants.DefaultTitles.confirm,
         textFieldAction: @escaping ([String]) -> Void
     ) -> Self {
-        let confirmAction = YAlertAction.textField(title: title, action: textFieldAction)
+        let confirmAction = Y_AlertAction.textField(title: title, action: textFieldAction)
         actions.append(confirmAction)
         if preferredActionIndex == nil {
             preferredActionIndex = actions.count - 1
@@ -289,21 +289,21 @@ public class YAlertBuilder {
     }
     
     public func cancelButton(
-        title: String = YAlertConstants.DefaultTitles.cancel,
+        title: String = Y_AlertConstants.DefaultTitles.cancel,
         action: (() -> Void)? = nil
     ) -> Self {
-        let cancelAction = YAlertAction.cancel(title: title, action: action ?? {})
+        let cancelAction = Y_AlertAction.cancel(title: title, action: action ?? {})
         actions.append(cancelAction)
         return self
     }
     
     public func deleteButton(action: @escaping () -> Void) -> Self {
-        let deleteAction = YAlertAction.delete(action: action)
+        let deleteAction = Y_AlertAction.delete(action: action)
         actions.append(deleteAction)
         return self
     }
     
-    public func style(_ style: YAlertStyle) -> Self {
+    public func style(_ style: Y_AlertStyle) -> Self {
         self.style = style
         return self
     }
@@ -313,8 +313,8 @@ public class YAlertBuilder {
         return self
     }
     
-    public func build() throws -> YAlertConfig {
-        return try YAlertConfig(
+    public func build() throws -> Y_AlertConfig {
+        return try Y_AlertConfig(
             title: title,
             message: message,
             textFields: textFields,

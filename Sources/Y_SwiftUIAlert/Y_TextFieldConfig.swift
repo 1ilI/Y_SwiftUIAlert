@@ -1,5 +1,5 @@
 //
-//  YTextFieldConfig.swift
+//  Y_TextFieldConfig.swift
 //  Y_SwiftUIAlert
 //
 //  Created by Yue on 2025.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - TextField配置模型
-public struct YTextFieldConfig {
+public struct Y_TextFieldConfig {
     
     // MARK: - 基础配置
     public let placeholder: String
@@ -19,7 +19,7 @@ public struct YTextFieldConfig {
     public let autocorrectionType: UITextAutocorrectionType
     
     // MARK: - 验证配置
-    public let validationRules: YValidationRuleSet?
+    public let validationRules: Y_ValidationRuleSet?
     public let validateOnChange: Bool // 是否实时验证
     public let showInlineError: Bool  // 是否在TextField下方显示错误
     
@@ -50,7 +50,7 @@ public struct YTextFieldConfig {
         isSecure: Bool = false,
         autocapitalizationType: UITextAutocapitalizationType = .sentences,
         autocorrectionType: UITextAutocorrectionType = .default,
-        validationRules: YValidationRuleSet? = nil,
+        validationRules: Y_ValidationRuleSet? = nil,
         validateOnChange: Bool = true,
         showInlineError: Bool = false,
         textColor: UIColor? = nil,
@@ -93,15 +93,15 @@ public struct YTextFieldConfig {
 }
 
 // MARK: - 便利构造方法
-public extension YTextFieldConfig {
+public extension Y_TextFieldConfig {
     
     /// 普通文本输入
     static func text(
         placeholder: String,
         initialText: String = "",
-        validation: YValidationRuleSet? = nil
-    ) -> YTextFieldConfig {
-        return YTextFieldConfig(
+        validation: Y_ValidationRuleSet? = nil
+    ) -> Y_TextFieldConfig {
+        return Y_TextFieldConfig(
             placeholder: placeholder,
             initialText: initialText,
             keyboardType: .default,
@@ -112,9 +112,9 @@ public extension YTextFieldConfig {
     /// 密码输入
     static func password(
         placeholder: String = "请输入密码",
-        validation: YValidationRuleSet? = nil
-    ) -> YTextFieldConfig {
-        return YTextFieldConfig(
+        validation: Y_ValidationRuleSet? = nil
+    ) -> Y_TextFieldConfig {
+        return Y_TextFieldConfig(
             placeholder: placeholder,
             keyboardType: .default,
             isSecure: true,
@@ -128,10 +128,10 @@ public extension YTextFieldConfig {
     /// 邮箱输入
     static func email(
         placeholder: String = "请输入邮箱地址",
-        validation: YValidationRuleSet? = nil
-    ) -> YTextFieldConfig {
-        let emailValidation = validation ?? YValidationRuleSet(.email)
-        return YTextFieldConfig(
+        validation: Y_ValidationRuleSet? = nil
+    ) -> Y_TextFieldConfig {
+        let emailValidation = validation ?? Y_ValidationRuleSet(.email)
+        return Y_TextFieldConfig(
             placeholder: placeholder,
             keyboardType: .emailAddress,
             autocapitalizationType: .none,
@@ -143,10 +143,10 @@ public extension YTextFieldConfig {
     /// 手机号输入
     static func phone(
         placeholder: String = "请输入手机号",
-        validation: YValidationRuleSet? = nil
-    ) -> YTextFieldConfig {
-        let phoneValidation = validation ?? YValidationRuleSet(.phone)
-        return YTextFieldConfig(
+        validation: Y_ValidationRuleSet? = nil
+    ) -> Y_TextFieldConfig {
+        let phoneValidation = validation ?? Y_ValidationRuleSet(.phone)
+        return Y_TextFieldConfig(
             placeholder: placeholder,
             keyboardType: .phonePad,
             validationRules: phoneValidation,
@@ -158,16 +158,16 @@ public extension YTextFieldConfig {
     /// 数字输入
     static func number(
         placeholder: String = "请输入数字",
-        validation: YValidationRuleSet? = nil,
+        validation: Y_ValidationRuleSet? = nil,
         allowDecimal: Bool = true
-    ) -> YTextFieldConfig {
-        let numberValidation = validation ?? YValidationRuleSet(.numeric)
+    ) -> Y_TextFieldConfig {
+        let numberValidation = validation ?? Y_ValidationRuleSet(.numeric)
         let keyboardType: UIKeyboardType = allowDecimal ? .decimalPad : .numberPad
         let allowedChars: CharacterSet = allowDecimal ? 
             CharacterSet(charactersIn: "0123456789.") : 
             CharacterSet.decimalDigits
             
-        return YTextFieldConfig(
+        return Y_TextFieldConfig(
             placeholder: placeholder,
             keyboardType: keyboardType,
             validationRules: numberValidation,
@@ -180,13 +180,13 @@ public extension YTextFieldConfig {
         placeholder: String = "请输入用户名",
         minLength: Int = 3,
         maxLength: Int = 20
-    ) -> YTextFieldConfig {
-        let validation = YValidationRuleSet([
+    ) -> Y_TextFieldConfig {
+        let validation = Y_ValidationRuleSet([
             .required,
             .length(min: minLength, max: maxLength)
         ])
         
-        return YTextFieldConfig(
+        return Y_TextFieldConfig(
             placeholder: placeholder,
             keyboardType: .default,
             autocapitalizationType: .none,
@@ -201,13 +201,13 @@ public extension YTextFieldConfig {
         placeholder: String = "请输入昵称",
         minLength: Int = 2,
         maxLength: Int = 15
-    ) -> YTextFieldConfig {
-        let validation = YValidationRuleSet([
+    ) -> Y_TextFieldConfig {
+        let validation = Y_ValidationRuleSet([
             .required,
             .length(min: minLength, max: maxLength)
         ])
         
-        return YTextFieldConfig(
+        return Y_TextFieldConfig(
             placeholder: placeholder,
             validationRules: validation,
             maxLength: maxLength
@@ -217,14 +217,14 @@ public extension YTextFieldConfig {
 
 // MARK: - Builder模式支持
 public class YTextFieldBuilder {
-    private var config: YTextFieldConfig
+    private var config: Y_TextFieldConfig
     
     public init(placeholder: String) {
-        self.config = YTextFieldConfig(placeholder: placeholder)
+        self.config = Y_TextFieldConfig(placeholder: placeholder)
     }
     
     public func initialText(_ text: String) -> Self {
-        config = YTextFieldConfig(
+        config = Y_TextFieldConfig(
             placeholder: config.placeholder,
             initialText: text,
             keyboardType: config.keyboardType,
@@ -256,7 +256,7 @@ public class YTextFieldBuilder {
         return self
     }
     
-    public func validation(_ rules: YValidationRuleSet) -> Self {
+    public func validation(_ rules: Y_ValidationRuleSet) -> Self {
         // Builder方法实现...
         return self
     }
@@ -266,7 +266,7 @@ public class YTextFieldBuilder {
         return self
     }
     
-    public func build() -> YTextFieldConfig {
+    public func build() -> Y_TextFieldConfig {
         return config
     }
 }

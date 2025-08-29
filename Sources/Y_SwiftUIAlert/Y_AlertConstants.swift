@@ -1,5 +1,5 @@
 //
-//  YAlertConstants.swift
+//  Y_AlertConstants.swift
 //  Y_SwiftUIAlert
 //
 //  Created by Yue on 2025.
@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - 配置常量
-public struct YAlertConstants {
+public struct Y_AlertConstants {
     
     // MARK: - 动画配置
     public static let defaultAnimationDuration: TimeInterval = 0.3
@@ -61,7 +61,7 @@ public struct YAlertConstants {
 }
 
 // MARK: - 国际化支持
-public struct YAlertLocalizable {
+public struct Y_AlertLocalizable {
     public static let confirm = NSLocalizedString("yalert.confirm", 
                                                   value: "确定", 
                                                   comment: "确认按钮")

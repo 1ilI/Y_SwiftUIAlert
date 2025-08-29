@@ -1,5 +1,5 @@
 //
-//  YAlertAction.swift
+//  Y_AlertAction.swift
 //  Y_SwiftUIAlert
 //
 //  Created by Yue on 2025.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Alert动作类型
-public enum YAlertActionType {
+public enum Y_AlertActionType {
     case normal(() -> Void)
     case textField(([String]) -> Void)
     case destructive(() -> Void)
@@ -16,13 +16,13 @@ public enum YAlertActionType {
 }
 
 // MARK: - Alert动作
-public struct YAlertAction {
+public struct Y_AlertAction {
     public let title: String
     public let style: UIAlertAction.Style
-    internal let actionType: YAlertActionType
+    internal let actionType: Y_AlertActionType
     
     // MARK: - 私有初始化方法
-    private init(title: String, style: UIAlertAction.Style, actionType: YAlertActionType) {
+    private init(title: String, style: UIAlertAction.Style, actionType: Y_AlertActionType) {
         self.title = title
         self.style = style
         self.actionType = actionType
@@ -40,10 +40,10 @@ public struct YAlertAction {
     
     /// 普通动作
     public static func normal(
-        title: String = YAlertConstants.DefaultTitles.confirm,
+        title: String = Y_AlertConstants.DefaultTitles.confirm,
         action: @escaping () -> Void
-    ) -> YAlertAction {
-        return YAlertAction(
+    ) -> Y_AlertAction {
+        return Y_AlertAction(
             title: title,
             style: .default,
             actionType: .normal(action)
@@ -52,10 +52,10 @@ public struct YAlertAction {
     
     /// TextField相关动作
     public static func textField(
-        title: String = YAlertConstants.DefaultTitles.confirm,
+        title: String = Y_AlertConstants.DefaultTitles.confirm,
         action: @escaping ([String]) -> Void
-    ) -> YAlertAction {
-        return YAlertAction(
+    ) -> Y_AlertAction {
+        return Y_AlertAction(
             title: title,
             style: .default,
             actionType: .textField(action)
@@ -64,10 +64,10 @@ public struct YAlertAction {
     
     /// 危险动作
     public static func destructive(
-        title: String = YAlertConstants.DefaultTitles.delete,
+        title: String = Y_AlertConstants.DefaultTitles.delete,
         action: @escaping () -> Void
-    ) -> YAlertAction {
-        return YAlertAction(
+    ) -> Y_AlertAction {
+        return Y_AlertAction(
             title: title,
             style: .destructive,
             actionType: .destructive(action)
@@ -76,10 +76,10 @@ public struct YAlertAction {
     
     /// 取消动作
     public static func cancel(
-        title: String = YAlertConstants.DefaultTitles.cancel,
+        title: String = Y_AlertConstants.DefaultTitles.cancel,
         action: (() -> Void)? = nil
-    ) -> YAlertAction {
-        return YAlertAction(
+    ) -> Y_AlertAction {
+        return Y_AlertAction(
             title: title,
             style: .cancel,
             actionType: .cancel(action ?? {})
@@ -89,45 +89,45 @@ public struct YAlertAction {
     // MARK: - 便利构造方法
     
     /// 确认动作（普通）
-    public static func confirm(action: @escaping () -> Void) -> YAlertAction {
-        return .normal(title: YAlertLocalizable.confirm, action: action)
+    public static func confirm(action: @escaping () -> Void) -> Y_AlertAction {
+        return .normal(title: Y_AlertLocalizable.confirm, action: action)
     }
     
     /// 确认动作（TextField）
-    public static func confirm(textFieldAction: @escaping ([String]) -> Void) -> YAlertAction {
-        return .textField(title: YAlertLocalizable.confirm, action: textFieldAction)
+    public static func confirm(textFieldAction: @escaping ([String]) -> Void) -> Y_AlertAction {
+        return .textField(title: Y_AlertLocalizable.confirm, action: textFieldAction)
     }
     
     /// 单TextField确认动作
-    public static func confirm(singleTextFieldAction: @escaping (String) -> Void) -> YAlertAction {
-        return .textField(title: YAlertLocalizable.confirm) { values in
+    public static func confirm(singleTextFieldAction: @escaping (String) -> Void) -> Y_AlertAction {
+        return .textField(title: Y_AlertLocalizable.confirm) { values in
             singleTextFieldAction(values.first ?? "")
         }
     }
     
     /// 取消动作（无回调）
-    public static var cancel: YAlertAction {
+    public static var cancel: Y_AlertAction {
         return .cancel()
     }
     
     /// 取消动作（有回调）
-    public static func cancel(action: @escaping () -> Void) -> YAlertAction {
-        return .cancel(title: YAlertLocalizable.cancel, action: action)
+    public static func cancel(action: @escaping () -> Void) -> Y_AlertAction {
+        return .cancel(title: Y_AlertLocalizable.cancel, action: action)
     }
     
     /// 删除动作
-    public static func delete(action: @escaping () -> Void) -> YAlertAction {
-        return .destructive(title: YAlertLocalizable.delete, action: action)
+    public static func delete(action: @escaping () -> Void) -> Y_AlertAction {
+        return .destructive(title: Y_AlertLocalizable.delete, action: action)
     }
     
     /// 保存动作
-    public static func save(action: @escaping () -> Void) -> YAlertAction {
-        return .normal(title: YAlertLocalizable.save, action: action)
+    public static func save(action: @escaping () -> Void) -> Y_AlertAction {
+        return .normal(title: Y_AlertLocalizable.save, action: action)
     }
     
     /// 重试动作
-    public static func retry(action: @escaping () -> Void) -> YAlertAction {
-        return .normal(title: YAlertLocalizable.retry, action: action)
+    public static func retry(action: @escaping () -> Void) -> Y_AlertAction {
+        return .normal(title: Y_AlertLocalizable.retry, action: action)
     }
     
     // MARK: - 内部执行方法

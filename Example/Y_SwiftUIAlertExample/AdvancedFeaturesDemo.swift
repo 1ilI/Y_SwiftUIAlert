@@ -12,7 +12,7 @@ import Y_SwiftUIAlert
 struct AdvancedFeaturesDemo: View {
     
     // MARK: - 状态管理
-    @State private var alertConfig: YAlertConfig?
+    @State private var alertConfig: Y_AlertConfig?
     @State private var resultMessage = ""
     
     // MARK: - Body
@@ -30,7 +30,7 @@ struct AdvancedFeaturesDemo: View {
             .navigationTitle("Y_SwiftUIAlert 示例")
         }
         // 主要YAlert系统
-        .yAlert($alertConfig)
+        .y_alert($alertConfig)
     }
 }
 
@@ -120,7 +120,7 @@ private extension AdvancedFeaturesDemo {
     // MARK: - 高级功能
     func showValidationAlert() {
         do {
-            let validation = YValidationRuleSet([
+            let validation = Y_ValidationRuleSet([
                 .required,
                 .length(min: 6, max: 20),
                 .custom(message: "密码必须包含数字") { text in
@@ -128,13 +128,13 @@ private extension AdvancedFeaturesDemo {
                 }
             ])
             
-            let passwordConfig = YTextFieldConfig(
+            let passwordConfig = Y_TextFieldConfig(
                 placeholder: "请输入密码（6-20位，含数字）",
                 isSecure: true,
                 validationRules: validation
             )
             
-            alertConfig = try YAlertConfig.textField(
+            alertConfig = try Y_AlertConfig.textField(
                 title: "密码验证",
                 message: "请输入符合要求的密码",
                 textFieldConfig: passwordConfig,
@@ -152,14 +152,14 @@ private extension AdvancedFeaturesDemo {
     
     func showAsyncAlert() async {
         do {
-            let config = try YAlertConfig.simple(
+            let config = try Y_AlertConfig.simple(
                 title: "异步Alert",
                 message: "这是使用async/await展示的Alert"
             ) {
                 resultMessage = "✅ 异步Alert - 操作完成"
             }
             
-            let result = await YAlertManager.shared.presentAlert(config)
+            let result = await Y_AlertManager.shared.presentAlert(config)
             
             switch result {
             case .success:
@@ -174,14 +174,14 @@ private extension AdvancedFeaturesDemo {
     
     func showAsyncAlert2() async {
         do {
-            let config = try YAlertConfig.simple(
+            let config = try Y_AlertConfig.simple(
                 title: "2异步Alert2",
                 message: "这是使用async/await展示的Alert2"
             ) {
                 resultMessage = "✅ 异步Alert2 - 操作完成"
             }
             
-            let result = await YAlertManager.shared.presentAlert(config)
+            let result = await Y_AlertManager.shared.presentAlert(config)
             
             switch result {
             case .success:
@@ -196,7 +196,7 @@ private extension AdvancedFeaturesDemo {
     
     func showComplexValidationAlert() {
         do {
-            let phoneValidation = YValidationRuleSet([
+            let phoneValidation = Y_ValidationRuleSet([
                 .required,
                 .custom(message: "请输入有效的手机号码") { text in
                     let phoneRegex = "^1[3-9]\\d{9}$"
@@ -205,13 +205,13 @@ private extension AdvancedFeaturesDemo {
                 }
             ])
             
-            let phoneConfig = YTextFieldConfig(
+            let phoneConfig = Y_TextFieldConfig(
                 placeholder: "请输入手机号码",
                 keyboardType: .numberPad,
                 validationRules: phoneValidation
             )
             
-            alertConfig = try YAlertConfig.textField(
+            alertConfig = try Y_AlertConfig.textField(
                 title: "手机验证",
                 message: "请输入11位有效手机号码",
                 textFieldConfig: phoneConfig,
@@ -230,13 +230,13 @@ private extension AdvancedFeaturesDemo {
     // MARK: - Builder模式
     func showBuilderAlert() {
         do {
-            let alert = try YAlertBuilder(title: "Builder示例")
+            let alert = try Y_AlertBuilder(title: "Builder示例")
                 .message("使用Builder模式创建的复杂Alert")
-                .textField(YTextFieldConfig.text(
+                .textField(Y_TextFieldConfig.text(
                     placeholder: "姓名",
-                    validation: YValidationRuleSet(.required, .length(min: 2, max: 10))
+                    validation: Y_ValidationRuleSet(.required, .length(min: 2, max: 10))
                 ))
-                .textField(YTextFieldConfig.number(
+                .textField(Y_TextFieldConfig.number(
                     placeholder: "年龄",
                     allowDecimal: false
                 ))
@@ -258,15 +258,15 @@ private extension AdvancedFeaturesDemo {
     
     func showBuilderFormAlert() {
         do {
-            let alert = try YAlertBuilder(title: "用户注册")
+            let alert = try Y_AlertBuilder(title: "用户注册")
                 .message("请填写注册信息")
-                .textField(YTextFieldConfig.username())
-                .textField(YTextFieldConfig.email())
-                .textField(YTextFieldConfig.password())
-                .textField(YTextFieldConfig(
+                .textField(Y_TextFieldConfig.username())
+                .textField(Y_TextFieldConfig.email())
+                .textField(Y_TextFieldConfig.password())
+                .textField(Y_TextFieldConfig(
                     placeholder: "确认密码",
                     isSecure: true,
-                    validationRules: YValidationRuleSet(.required)
+                    validationRules: Y_ValidationRuleSet(.required)
                 ))
                 .confirmButton(title: "注册") { values in
                     resultMessage = "✅ Builder表单 - 用户名: '\(values[0])', 邮箱: '\(values[1])'"

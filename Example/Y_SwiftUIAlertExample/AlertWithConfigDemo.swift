@@ -9,11 +9,11 @@
 import SwiftUI
 import Y_SwiftUIAlert
 
-// MARK: - 通过 YAlertConfig 展示 Alert
+// MARK: - 通过 Y_AlertConfig 展示 Alert
 struct AlertWithConfigDemo: View {
     
     // MARK: - 状态管理
-    @State private var alertConfig: YAlertConfig?
+    @State private var alertConfig: Y_AlertConfig?
     @State private var resultMessage = ""
     
     // MARK: - Body
@@ -31,13 +31,13 @@ struct AlertWithConfigDemo: View {
             .navigationTitle("Y_SwiftUIAlert 示例")
         }
         // 主要YAlert系统
-        .yAlert($alertConfig)
+        .y_alert($alertConfig)
     }
     
     var directUsageSection: some View {
-        GroupBox("直接使用YAlertConfig") {
+        GroupBox("直接使用Y_AlertConfig") {
             VStack(spacing: 12) {
-                Text("使用YAlertConfig直接创建Alert")
+                Text("使用Y_AlertConfig直接创建Alert")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 
@@ -93,14 +93,14 @@ struct AlertWithConfigDemo: View {
     }
 }
 
-// MARK: - 直接使用YAlertConfig展示
+// MARK: - 直接使用Y_AlertConfig展示
 private extension AlertWithConfigDemo {
 
     func showSimpleConfigAlert() {
         do {
-            alertConfig = try YAlertConfig.simple(
+            alertConfig = try Y_AlertConfig.simple(
                 title: "直接Config",
-                message: "这是直接使用YAlertConfig.simple创建的Alert",
+                message: "这是直接使用Y_AlertConfig.simple创建的Alert",
                 confirmTitle: "知道了"
             ) {
                 resultMessage = "✅ 直接Config - 简单Alert确认"
@@ -112,9 +112,9 @@ private extension AlertWithConfigDemo {
     
     func showConfirmConfigAlert() {
         do {
-            alertConfig = try YAlertConfig.confirm(
+            alertConfig = try Y_AlertConfig.confirm(
                 title: "确认删除",
-                message: "您确定要删除这个项目吗？使用YAlertConfig.confirm创建。",
+                message: "您确定要删除这个项目吗？使用Y_AlertConfig.confirm创建。",
                 onConfirm: {
                     resultMessage = "✅ 直接Config - 确认删除"
                 },
@@ -129,7 +129,7 @@ private extension AlertWithConfigDemo {
     
     func showDestructiveConfigAlert() {
         do {
-            alertConfig = try YAlertConfig.destructive(
+            alertConfig = try Y_AlertConfig.destructive(
                 title: "永久删除",
                 message: "此操作将永久删除所有数据，无法撤销！",
                 onDestructive: {
@@ -146,11 +146,11 @@ private extension AlertWithConfigDemo {
     
     func showTextFieldConfigAlert() {
         do {
-            let textFieldConfig = YTextFieldConfig.email(
+            let textFieldConfig = Y_TextFieldConfig.email(
                 placeholder: "请输入邮箱地址"
             )
             
-            alertConfig = try YAlertConfig.textField(
+            alertConfig = try Y_AlertConfig.textField(
                 title: "设置邮箱",
                 message: "请输入您的邮箱地址，我们将发送验证码",
                 textFieldConfig: textFieldConfig,

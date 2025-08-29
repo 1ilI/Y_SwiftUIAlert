@@ -1,5 +1,5 @@
 //
-//  YAlertModifier.swift
+//  Y_AlertModifier.swift
 //  Y_SwiftUIAlert
 //
 //  Created by Yue on 2025.
@@ -10,27 +10,27 @@ import SwiftUI
 // MARK: - SwiftUI View扩展
 public extension View {
     
-    /// 使用YAlertManager展示Alert
+    /// 使用Y_AlertManager展示Alert
     /// - Parameter config: Alert配置的绑定值，当有值时自动展示Alert
-    func yAlert(_ config: Binding<YAlertConfig?>) -> some View {
-        modifier(YAlertModifier(config: config))
+    func y_alert(_ config: Binding<Y_AlertConfig?>) -> some View {
+        modifier(Y_AlertModifier(config: config))
     }
     
     /// 使用自定义AlertManager展示Alert
     /// - Parameters:
     ///   - config: Alert配置的绑定值
     ///   - manager: 自定义的AlertManager
-    func yAlert(_ config: Binding<YAlertConfig?>, manager: YAlertManager) -> some View {
-        modifier(YAlertModifier(config: config, manager: manager))
+    func y_alert(_ config: Binding<Y_AlertConfig?>, manager: Y_AlertManager) -> some View {
+        modifier(Y_AlertModifier(config: config, manager: manager))
     }
 }
 
 // MARK: - Alert修饰符实现
-public struct YAlertModifier: ViewModifier {
-    @Binding var config: YAlertConfig?
-    let manager: YAlertManager
+public struct Y_AlertModifier: ViewModifier {
+    @Binding var config: Y_AlertConfig?
+    let manager: Y_AlertManager
     
-    public init(config: Binding<YAlertConfig?>, manager: YAlertManager = .shared) {
+    public init(config: Binding<Y_AlertConfig?>, manager: Y_AlertManager = .shared) {
         self._config = config
         self.manager = manager
     }
@@ -44,7 +44,7 @@ public struct YAlertModifier: ViewModifier {
             }
     }
     
-    private func presentAlert(_ alertConfig: YAlertConfig) {
+    private func presentAlert(_ alertConfig: Y_AlertConfig) {
         debugLog("📱 SwiftUI触发Alert展示: '\(alertConfig.title)'")
         
         manager.presentAlert(alertConfig) { result in
@@ -66,15 +66,15 @@ public struct YAlertModifier: ViewModifier {
 // MARK: - 缓存Alert修饰符（避免重复创建）
 public struct CachedAlertModifier: ViewModifier {
     @Binding var isPresented: Bool
-    let configFactory: () -> YAlertConfig?
-    let manager: YAlertManager
+    let configFactory: () -> Y_AlertConfig?
+    let manager: Y_AlertManager
     
-    @State private var cachedConfig: YAlertConfig?
+    @State private var cachedConfig: Y_AlertConfig?
     
     public init(
         isPresented: Binding<Bool>,
-        configFactory: @escaping () -> YAlertConfig?,
-        manager: YAlertManager = .shared
+        configFactory: @escaping () -> Y_AlertConfig?,
+        manager: Y_AlertManager = .shared
     ) {
         self._isPresented = isPresented
         self.configFactory = configFactory
@@ -98,7 +98,7 @@ public struct CachedAlertModifier: ViewModifier {
             }
     }
     
-    private func presentAlert(_ alertConfig: YAlertConfig) {
+    private func presentAlert(_ alertConfig: Y_AlertConfig) {
         debugLog("📱 SwiftUI触发Alert展示: '\(alertConfig.title)'")
         
         manager.presentAlert(alertConfig) { result in
@@ -128,18 +128,18 @@ public extension View {
     ///   - message: Alert消息（可选）
     ///   - confirmTitle: 确认按钮标题
     ///   - onConfirm: 确认按钮回调
-    func ySimpleAlert(
+    func y_simpleAlert(
         _ title: String,
         isPresented: Binding<Bool>,
         message: String? = nil,
-        confirmTitle: String = YAlertConstants.DefaultTitles.confirm,
+        confirmTitle: String = Y_AlertConstants.DefaultTitles.confirm,
         onConfirm: (() -> Void)? = nil
     ) -> some View {
         
         return self.modifier(CachedAlertModifier(
             isPresented: isPresented,
             configFactory: {
-                try? YAlertConfig.simple(
+                try? Y_AlertConfig.simple(
                     title: title,
                     message: message,
                     confirmTitle: confirmTitle,
@@ -161,12 +161,12 @@ public extension View {
     ///   - cancelTitle: 取消按钮标题
     ///   - onConfirm: 确认按钮回调
     ///   - onCancel: 取消按钮回调
-    func yConfirmAlert(
+    func y_confirmAlert(
         _ title: String,
         isPresented: Binding<Bool>,
         message: String? = nil,
-        confirmTitle: String = YAlertConstants.DefaultTitles.confirm,
-        cancelTitle: String = YAlertConstants.DefaultTitles.cancel,
+        confirmTitle: String = Y_AlertConstants.DefaultTitles.confirm,
+        cancelTitle: String = Y_AlertConstants.DefaultTitles.cancel,
         onConfirm: @escaping () -> Void,
         onCancel: (() -> Void)? = nil
     ) -> some View {
@@ -174,7 +174,7 @@ public extension View {
         return self.modifier(CachedAlertModifier(
             isPresented: isPresented,
             configFactory: {
-                try? YAlertConfig.confirm(
+                try? Y_AlertConfig.confirm(
                     title: title,
                     message: message,
                     confirmTitle: confirmTitle,
@@ -201,12 +201,12 @@ public extension View {
     ///   - cancelTitle: 取消按钮标题
     ///   - onDestructive: 危险按钮回调
     ///   - onCancel: 取消按钮回调
-    func yDestructiveAlert(
+    func y_destructiveAlert(
         _ title: String,
         isPresented: Binding<Bool>,
         message: String? = nil,
-        destructiveTitle: String = YAlertConstants.DefaultTitles.delete,
-        cancelTitle: String = YAlertConstants.DefaultTitles.cancel,
+        destructiveTitle: String = Y_AlertConstants.DefaultTitles.delete,
+        cancelTitle: String = Y_AlertConstants.DefaultTitles.cancel,
         onDestructive: @escaping () -> Void,
         onCancel: (() -> Void)? = nil
     ) -> some View {
@@ -214,7 +214,7 @@ public extension View {
         return self.modifier(CachedAlertModifier(
             isPresented: isPresented,
             configFactory: {
-                try? YAlertConfig.destructive(
+                try? Y_AlertConfig.destructive(
                     title: title,
                     message: message,
                     destructiveTitle: destructiveTitle,
@@ -242,13 +242,13 @@ public extension View {
     ///   - cancelTitle: 取消按钮标题
     ///   - onConfirm: 确认按钮回调，包含输入的文本
     ///   - onCancel: 取消按钮回调
-    func yTextFieldAlert(
+    func y_textFieldAlert(
         _ title: String,
         isPresented: Binding<Bool>,
         message: String? = nil,
-        textFieldConfig: YTextFieldConfig,
-        confirmTitle: String = YAlertConstants.DefaultTitles.confirm,
-        cancelTitle: String = YAlertConstants.DefaultTitles.cancel,
+        textFieldConfig: Y_TextFieldConfig,
+        confirmTitle: String = Y_AlertConstants.DefaultTitles.confirm,
+        cancelTitle: String = Y_AlertConstants.DefaultTitles.cancel,
         onConfirm: @escaping (String) -> Void,
         onCancel: (() -> Void)? = nil
     ) -> some View {
@@ -256,7 +256,7 @@ public extension View {
         return self.modifier(CachedAlertModifier(
             isPresented: isPresented,
             configFactory: {
-                try? YAlertConfig.textField(
+                try? Y_AlertConfig.textField(
                     title: title,
                     message: message,
                     textFieldConfig: textFieldConfig,
@@ -285,13 +285,13 @@ public extension View {
     ///   - cancelTitle: 取消按钮标题
     ///   - onConfirm: 确认按钮回调，包含所有TextField的文本
     ///   - onCancel: 取消按钮回调
-    func yMultiTextFieldAlert(
+    func y_multiTextFieldAlert(
         _ title: String,
         isPresented: Binding<Bool>,
         message: String? = nil,
-        textFieldConfigs: [YTextFieldConfig],
-        confirmTitle: String = YAlertConstants.DefaultTitles.confirm,
-        cancelTitle: String = YAlertConstants.DefaultTitles.cancel,
+        textFieldConfigs: [Y_TextFieldConfig],
+        confirmTitle: String = Y_AlertConstants.DefaultTitles.confirm,
+        cancelTitle: String = Y_AlertConstants.DefaultTitles.cancel,
         onConfirm: @escaping ([String]) -> Void,
         onCancel: (() -> Void)? = nil
     ) -> some View {
@@ -299,7 +299,7 @@ public extension View {
         return self.modifier(CachedAlertModifier(
             isPresented: isPresented,
             configFactory: {
-                try? YAlertConfig.multiTextField(
+                try? Y_AlertConfig.multiTextField(
                     title: title,
                     message: message,
                     textFieldConfigs: textFieldConfigs,
@@ -328,11 +328,11 @@ public extension View {
     ///   - isPresented: 控制显示的绑定值
     ///   - message: ActionSheet消息（可选）
     ///   - actions: 操作按钮数组
-    func yActionSheet(
+    func y_actionSheet(
         _ title: String,
         isPresented: Binding<Bool>,
         message: String? = nil,
-        actions: [YAlertAction]
+        actions: [Y_AlertAction]
     ) -> some View {
         
         return self.modifier(CachedAlertModifier(
@@ -342,30 +342,30 @@ public extension View {
                 let wrappedActions = actions.map { originalAction in
                     switch originalAction.actionType {
                     case .normal(let callback):
-                        return YAlertAction.normal(title: originalAction.title) {
+                        return Y_AlertAction.normal(title: originalAction.title) {
                             callback()
                             isPresented.wrappedValue = false
                         }
                     case .destructive(let callback):
-                        return YAlertAction.destructive(title: originalAction.title) {
+                        return Y_AlertAction.destructive(title: originalAction.title) {
                             callback()
                             isPresented.wrappedValue = false
                         }
                     case .cancel(let callback):
-                        return YAlertAction.cancel(title: originalAction.title) {
+                        return Y_AlertAction.cancel(title: originalAction.title) {
                             callback()
                             isPresented.wrappedValue = false
                         }
                     case .textField(let callback):
                         // ActionSheet通常不使用TextField，但为了完整性保留
-                        return YAlertAction.textField(title: originalAction.title) { values in
+                        return Y_AlertAction.textField(title: originalAction.title) { values in
                             callback(values)
                             isPresented.wrappedValue = false
                         }
                     }
                 }
                 
-                return try? YAlertConfig.actionSheet(
+                return try? Y_AlertConfig.actionSheet(
                     title: title,
                     message: message,
                     actions: wrappedActions

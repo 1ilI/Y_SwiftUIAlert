@@ -48,7 +48,7 @@ public struct YValidationRule {
     public static var required: YValidationRule {
         return YValidationRule(priority: 0) { text in
             guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                return .invalid(message: YAlertLocalizable.validationRequired)
+                return .invalid(message: Y_AlertLocalizable.validationRequired)
             }
             return .valid
         }
@@ -59,10 +59,10 @@ public struct YValidationRule {
         return YValidationRule(priority: 1) { text in
             let count = text.count
             guard count >= min else {
-                return .invalid(message: YAlertLocalizable.validationMinLength(min))
+                return .invalid(message: Y_AlertLocalizable.validationMinLength(min))
             }
             guard count <= max else {
-                return .invalid(message: YAlertLocalizable.validationMaxLength(max))
+                return .invalid(message: Y_AlertLocalizable.validationMaxLength(max))
             }
             return .valid
         }
@@ -72,7 +72,7 @@ public struct YValidationRule {
     public static func minLength(_ min: Int) -> YValidationRule {
         return YValidationRule(priority: 1) { text in
             guard text.count >= min else {
-                return .invalid(message: YAlertLocalizable.validationMinLength(min))
+                return .invalid(message: Y_AlertLocalizable.validationMinLength(min))
             }
             return .valid
         }
@@ -82,7 +82,7 @@ public struct YValidationRule {
     public static func maxLength(_ max: Int) -> YValidationRule {
         return YValidationRule(priority: 1) { text in
             guard text.count <= max else {
-                return .invalid(message: YAlertLocalizable.validationMaxLength(max))
+                return .invalid(message: Y_AlertLocalizable.validationMaxLength(max))
             }
             return .valid
         }
@@ -154,7 +154,7 @@ public struct YValidationRule {
 }
 
 // MARK: - 验证规则组合
-public struct YValidationRuleSet {
+public struct Y_ValidationRuleSet {
     private let rules: [YValidationRule]
     
     public init(_ rules: [YValidationRule]) {
